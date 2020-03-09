@@ -1,0 +1,47 @@
+.item{
+    font-size: 24px;
+    font-weight: 300;
+    display: flex ;
+    align-items: center;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: white;
+    /* border-bottom: 0px; */
+    user-select: none;
+    position: relative;
+}
+.item:last-child{
+    border-bottom: 1px solid #999;
+}
+.item-done  {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+.icon{
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+.cross{
+    position: absolute;
+    right: 0px;
+    display: none;
+    transition: all 2s;
+    width: 15px;
+    height: 15px;
+}
+
+.item:hover{
+    cursor: pointer;
+}
+
+.item:hover .cross{
+    cursor: pointer;
+    display: block;
+}
+.text-edit{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: none;
+}

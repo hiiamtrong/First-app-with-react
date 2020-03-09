@@ -1,0 +1,95 @@
+.App {
+  max-width: 400px;
+  margin: 0 auto;
+  border: 1px solid #EEE;
+  padding: 20px 40px;
+  background-color: white;
+  box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.116);
+}
+
+.App .input__add-item{
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.App .input__add-item input{
+  border: 0px;
+  background-color: transparent;
+  outline: none;
+  padding: 4px 5px;
+  font-size: 20px;
+}
+
+.App .input__add-item img{
+  height: 20px;
+  width: 20px;
+}
+
+.status-done{
+  opacity: 0.5;
+}
+
+.footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 30px;
+  height: 30px;
+}
+
+.list-btn{
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.list-btn .btn-action{
+  border: 0px;
+  outline-color: rgba(255, 166, 0, 0.459);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.clear-btn{
+  visibility: hidden;
+}
+.clear-btn:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+.clear-completed{
+  visibility: visible;
+}
+
+.display-block{
+  display: block !important;
+}
+
+.isAll{
+  display: block;
+}
+
+.isCompleted{
+  display: none !important;
+}
+.isActive{
+  display: none !important;
+}
+
+
+.item{
+  font-size: 24px;
+  font-weight: 300;
+  display: flex ;
+  align-items: center;
+  padding: 5px;
+  border: 1px solid #999;
+  background-color: white;
+  /* border-bottom: 0px; */
+  user-select: none;
+  position: relative;
+}
+.item:last-child{
+  border-bottom: 1px solid #999;
+}
