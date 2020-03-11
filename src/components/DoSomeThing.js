@@ -4,7 +4,7 @@ class DoSomeThing extends Component {
   render() {
     return (
       <div>
-        <h2 className="title">First App By TrongDev</h2>
+        <h2 className="title">ToDo Something</h2>
         <h4>
           Major:
           <i> {this.props.major}</i>

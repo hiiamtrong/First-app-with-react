@@ -17,17 +17,19 @@ class App extends Component {
         { title: "Play video game", isDone: true }
       ],
       isCurrentStatus: true,
-      isAll:true,
-      isActive:false,
-      isCompleted:false
+      isAll: true,
+      isActive: false,
+      isCompleted: false
     };
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onDoneAll = this.onDoneAll.bind(this);
-    this.onClearCompleted = this.onClearCompleted.bind(this)
-    this.onViewAll = this.onViewAll.bind(this)
-    this.onViewActive = this.onViewActive.bind(this)
-    this.onViewCompleted = this.onViewCompleted.bind(this)
+    this.onClearCompleted = this.onClearCompleted.bind(this);
+    this.onViewAll = this.onViewAll.bind(this);
+    this.onViewActive = this.onViewActive.bind(this);
+    this.onViewCompleted = this.onViewCompleted.bind(this);
+    this.onEdit = this.onEdit.bind(this);
+    this.onCancelEdit = this.onCancelEdit.bind(this);
   }
   onItemClick(item) {
     return () => {
@@ -43,12 +45,14 @@ class App extends Component {
       });
       item.isDone = !item.isDone;
     };
+    this.onCancelEdit();
   }
 
   onKeyUp(event) {
     let value = event.target.value;
     let Items = this.state.Items;
     let newItem = this.state.newItem;
+    this.onCancelEdit();
     // console.log(value)
     if (event.keyCode === 13) {
       if (newItem === "") {
@@ -71,10 +75,12 @@ class App extends Component {
     this.setState({
       newItem: event.target.value
     });
+    this.onCancelEdit();
   }
 
   onDoneAll() {
     let Items = this.state.Items;
+    this.onCancelEdit();
     this.setState({
       Items: Items.map(item => {
         item.isDone = this.state.isCurrentStatus;
@@ -87,54 +93,111 @@ class App extends Component {
 
   onRemove(item) {
     return event => {
+      this.onCancelEdit();
       let Items = this.state.Items;
       let index = Items.indexOf(item);
       this.setState({
         Items: [...Items.slice(0, index), ...Items.slice(index + 1)]
       });
     };
-    console.log(item)
+
+    console.log(item);
   }
 
-  onClearCompleted(){
+  onClearCompleted() {
+    this.onCancelEdit();
     this.setState({
-      Items:this.state.Items.filter(item=>item.isDone===false)
-    })
+      Items: this.state.Items.filter(item => item.isDone === false)
+    });
   }
-  onViewAll(){
+  onViewAll() {
     this.setState({
-      isAll:true,
-      isCompleted:false,
-      isActive:false
-    })
+      isAll: true,
+      isCompleted: false,
+      isActive: false
+    });
+    this.onCancelEdit();
   }
-  onViewActive(){
+  onViewActive() {
     this.setState({
-      isActive:true,
-      isAll:false,
-      isCompleted:false
-    })
-    console.log(this.state.isActive)
+      isActive: true,
+      isAll: false,
+      isCompleted: false
+    });
+    this.onCancelEdit();
+    console.log(this.state.isActive);
   }
-  onViewCompleted(){
+  onViewCompleted() {
     this.setState({
-      isCompleted:true,
-      isActive:false,
-      isAll:false
-    })
+      isCompleted: true,
+      isActive: false,
+      isAll: false
+    });
+    this.onCancelEdit();
   }
 
-  onDoubleClick(item){
-    return (event)=>{
-      console.log(event.target)
-      console.log(event.target.lastChild)
-      event.target.lastChild.classList+= ' display-block'
-    }
+  onDoubleClick(item) {
+    let Items = this.state.Items;
+    let index = Items.indexOf(item);
+    return event => {
+      console.log(event.target);
+      if (event.target.lastChild) {
+        event.target.lastChild.value = "";
+        // event.target.
+      }
+      this.setState({
+        Items: [
+          ...Items.slice(0, index).map(item => {
+            delete item.isEdit;
+            return item;
+          }),
+          { ...item, isEdit: true },
+          ...Items.slice(index + 1).map(item => {
+            delete item.isEdit;
+            return item;
+          })
+        ]
+      });
+    };
+  }
+  onEdit(item) {
+    return event => {
+      let value = event.target.value;
+      let Items = this.state.Items;
+      let index = Items.indexOf(item);
+      if (event.keyCode === 13) {
+        if (value === "") {
+          return;
+        }
+
+        value = value.trim();
+
+        if (value === "") {
+          return;
+        }
+        this.setState({
+          Items: [
+            ...Items.slice(0, index),
+            { ...item, title: value, isEdit: false },
+            ...Items.slice(index + 1)
+          ]
+        });
+        document.querySelector(".isEdit").value = "";
+      }
+    };
+  }
+  onCancelEdit() {
+    this.setState({
+      Items: this.state.Items.map(item => {
+        delete item.isEdit;
+        return item;
+      })
+    });
   }
 
   render() {
     return (
-      <div className="App" >
+      <div className="App">
         <DoSomeThing
           major="Software Engineering"
           school="Hanoi University of Industry"
@@ -151,7 +214,7 @@ class App extends Component {
           />
           <input
             type="text"
-            placeholder="Add an item"
+            placeholder="Add a work"
             onKeyUp={this.onKeyUp}
             onChange={this.onChange}
             value={this.state.newItem}
@@ -163,29 +226,53 @@ class App extends Component {
               <Item
                 key={index}
                 item={item}
-                className= {ClassNames({
-                  'item':true,
-                  "isActive":(item.isDone && this.state.isActive),
-                  "isCompleted": !item.isDone && this.state.isCompleted,
-                  "isAll":  this.state.isAll
+                className={ClassNames({
+                  item: true,
+                  isActive: item.isDone && this.state.isActive,
+                  isCompleted: !item.isDone && this.state.isCompleted,
+                  isAll: this.state.isAll
+                })}
+                Input={ClassNames({
+                  "text-edit": true,
+                  isEdit: item.isEdit
                 })}
                 onClick={this.onItemClick(item)}
                 onRemove={this.onRemove(item)}
-                // onDoubleClick = {this.onDoubleClick(item)}
+                onDoubleClick={this.onDoubleClick(item)}
+                onEdit={this.onEdit(item)}
               />
             ))}
             {
               <div className="footer">
-                <label>{this.state.Items.length} items left</label>
+                <label>
+                  {
+                    this.state.Items.filter(item => item.isDone === false)
+                      .length
+                  }{" "}
+                  items left
+                </label>
                 <div className="list-btn">
-                  <button className="btn-action" onClick={this.onViewAll}>All</button>
-                  <button className="btn-action" onClick={this.onViewActive}>Active</button>
-                  <button className="btn-action" onClick={this.onViewCompleted}>Completed</button>
+                  <button className="btn-action" onClick={this.onViewAll}>
+                    All
+                  </button>
+                  <button className="btn-action" onClick={this.onViewActive}>
+                    Active
+                  </button>
+                  <button className="btn-action" onClick={this.onViewCompleted}>
+                    Completed
+                  </button>
                 </div>
-                <div onClick={this.onClearCompleted} className={ClassNames({
-                  "clear-btn":true,
-                  "clear-completed": this.state.Items.some(item=>item.isDone===true)
-                })}>Clear completed</div>
+                <div
+                  onClick={this.onClearCompleted}
+                  className={ClassNames({
+                    "clear-btn": true,
+                    "clear-completed": this.state.Items.some(
+                      item => item.isDone === true
+                    )
+                  })}
+                >
+                  Clear completed
+                </div>
               </div>
             }
           </div>

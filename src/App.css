@@ -62,9 +62,7 @@
   visibility: visible;
 }
 
-.display-block{
-  display: block !important;
-}
+
 
 .isAll{
   display: block;
@@ -92,4 +90,21 @@
 }
 .item:last-child{
   border-bottom: 1px solid #999;
+}
+
+
+.text-edit{
+  position: absolute;
+  display: none;
+  left: 1%;
+  height: 90%;
+  width: 90%;
+  font-size: 20px;
+  padding: 0 20px;
+  box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.699);
+  z-index: 2;
+}
+
+.isEdit{
+  display: block !important;
 }
